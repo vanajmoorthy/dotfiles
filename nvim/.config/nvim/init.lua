@@ -1,0 +1,146 @@
+vim.g.base46_cache = vim.fn.stdpath "data" .. "/nvchad/base46/"
+vim.g.mapleader = " "
+
+-- bootstrap lazy and all plugins
+local lazypath = vim.fn.stdpath "data" .. "/lazy/lazy.nvim"
+
+if not vim.uv.fs_stat(lazypath) then
+  local repo = "https://github.com/folke/lazy.nvim.git"
+  vim.fn.system { "git", "clone", "--filter=blob:none", repo, "--branch=stable", lazypath }
+end
+
+vim.opt.rtp:prepend(lazypath)
+vim.wo.relativenumber = true
+
+local lazy_config = require "configs.lazy"
+
+-- load plugins
+require("lazy").setup({
+  {
+    "NvChad/NvChad",
+    lazy = false,
+    branch = "v2.5",
+    import = "nvchad.plugins",
+  },
+
+  { import = "plugins" },
+
+  -- Mason setup to install Prettier
+  {
+    "williamboman/mason.nvim",
+    config = function()
+      require("mason").setup()
+    end,
+  },
+
+  {
+    "williamboman/mason-lspconfig.nvim",
+    config = function()
+      require("mason-lspconfig").setup {
+        ensure_installed = {
+          -- Formatters
+          "prettier", -- Keep this for conform.nvim
+          "stylua", -- Add if you use it for Lua (conform example)
+          "gofmt", -- Add if using Go (conform example)
+          "goimports", -- Add if using Go (conform example)
+          "black",
+          "isort",
+          "terraform_fmt",
+
+          -- LSPs
+          "gopls",
+          "denols",
+          "emmet_ls",
+          "tailwindcss", -- Add this
+          "tsserver", -- Add this (Mason's name for typescript-language-server)
+          "eslint", -- Add this (Or eslint_d if you prefer)
+          "html", -- Add this
+          "cssls", -- Add this
+          "pyright",
+          "flake8",
+          "terraformls",
+
+          -- Add any other linters/formatters/LSPs you use here
+        },
+        -- Optional: Add automatic_installation = true if you want Mason to automatically install listed servers if missing
+        -- automatic_installation = true,
+      }
+    end,
+  },
+  {
+    "nvim-treesitter/nvim-treesitter",
+    run = ":TSUpdate",
+  },
+  {
+    "folke/flash.nvim",
+    event = "VeryLazy",
+    vscode = true,
+    ---@type Flash.Config
+    opts = {},
+    -- stylua: ignore
+    keys = {
+      { "s",     mode = { "n", "x", "o" }, function() require("flash").jump() end,              desc = "Flash" },
+      { "S",     mode = { "n", "o", "x" }, function() require("flash").treesitter() end,        desc = "Flash Treesitter" },
+      { "r",     mode = "o",               function() require("flash").remote() end,            desc = "Remote Flash" },
+      { "R",     mode = { "o", "x" },      function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+      { "<c-s>", mode = { "c" },           function() require("flash").toggle() end,            desc = "Toggle Flash Search" },
+    },
+  },
+}, lazy_config)
+
+require("nvim-treesitter.configs").setup {
+  ensure_installed = {
+    "typescript",
+    "tsx",
+    "python",
+    "lua",
+    "vim",
+    "vimdoc",
+    "json",
+    "yaml",
+    "html",
+    "css",
+    "markdown",
+    "terraform",
+    "hcl",
+  },
+  highlight = {
+    enable = true,
+  },
+  indent = { enable = true },
+}
+
+require("telescope").setup {
+  defaults = {
+    file_ignore_patterns = {
+      "node_modules",
+    },
+  },
+}
+
+-- load theme
+dofile(vim.g.base46_cache .. "defaults")
+dofile(vim.g.base46_cache .. "statusline")
+
+require "options"
+require "nvchad.autocmds"
+
+vim.keymap.set("n", "<leader>a", 'ggVG"+y', { noremap = true, silent = true })
+
+vim.schedule(function()
+  require "mappings"
+end)
+
+vim.api.nvim_create_autocmd("BufDelete", {
+  callback = function()
+    local bufs = vim.t.bufs
+    if #bufs == 1 and vim.api.nvim_buf_get_name(bufs[1]) == "" then
+      vim.cmd "Nvdash"
+    end
+  end,
+})
+
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
+vim.o.foldenable = true
+vim.o.foldlevel = 99
