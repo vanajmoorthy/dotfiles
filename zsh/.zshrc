@@ -112,6 +112,11 @@ source $HOMEBREW_PREFIX/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+#
+#
+
+eval "$(fnm env --use-on-cd --shell=zsh)"
+
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/go/bin
 export DENO_INSTALL="/Users/vanajmoorthy/.deno"
@@ -137,49 +142,28 @@ function display_fortune() {
 display_fortune
 
 
-export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
-
-# place this after nvm initialization!
-autoload -U add-zsh-hook
-
-load-nvmrc() {
-  local nvmrc_path
-  nvmrc_path="$(nvm_find_nvmrc)"
-
-  if [ -n "$nvmrc_path" ]; then
-    local nvmrc_node_version
-    nvmrc_node_version=$(nvm version "$(cat "${nvmrc_path}")")
-
-    if [ "$nvmrc_node_version" = "N/A" ]; then
-      nvm install
-    elif [ "$nvmrc_node_version" != "$(nvm version)" ]; then
-      nvm use
-    fi
-  elif [ -n "$(PWD=$OLDPWD nvm_find_nvmrc)" ] && [ "$(nvm version)" != "$(nvm version default)" ]; then
-    echo "Reverting to nvm default version"
-    nvm use default
+lazy_conda() {
+  unset -f conda   # So the real command gets called next time!
+  __conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
+  if [ $? -eq 0 ]; then
+      eval "$__conda_setup"
+  elif [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
+      . "/opt/anaconda3/etc/profile.d/conda.sh"
+  else
+      export PATH="/opt/anaconda3/bin:$PATH"
   fi
+  unset __conda_setup
+  conda "$@"
 }
 
-add-zsh-hook chpwd load-nvmrc
-load-nvmrc
+alias conda=lazy_conda
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/anaconda3/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/anaconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/anaconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/anaconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
+
+autoload -Uz compinit
+# Use -C to enable cache (default Oh My Zsh may already be set, safe to add)
+compinit -C
+
+
 source <(fzf --zsh)
 . "/Users/vanajmoorthy/.deno/env"
 
@@ -192,6 +176,8 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
+
 . "$HOME/.local/bin/env"
 
 eval "$(zoxide init zsh)"
+
