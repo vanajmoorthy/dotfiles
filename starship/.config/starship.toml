@@ -1,3 +1,21 @@
+# --- prompt layout ---
+format = """$directory$git_branch$all"""
+right_format = """$cmd_duration $time"""
+
+[cmd_duration]
+format = "[$duration]($style) "
+style = "yellow"
+
+[time]
+disabled = false
+format = "[$time]($style)"
+time_format = "%H:%M:%S"
+style = "cyan"
+
+[character]
+success_symbol = "[❯](bold fg:#ff66aa)"   # pink for success
+error_symbol = "[❯](bold red)"   
+
 [aws]
 symbol = "  "
 
@@ -30,6 +48,7 @@ symbol = " "
 
 [directory]
 read_only = " 󰌾"
+style = "bold fg:#ff66aa"
 
 [docker_context]
 symbol = " "
@@ -51,6 +70,7 @@ symbol = "  "
 
 [git_branch]
 symbol = " "
+style = "bold fg:#00ff5f"
 
 [git_commit]
 tag_symbol = '  '
