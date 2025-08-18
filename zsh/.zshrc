@@ -126,10 +126,6 @@ alias gs="git status"
 alias nom=npm 
 alias cd="z"
 
-source ~/powerlevel10k/powerlevel10k.zsh-theme
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # To ensure no output for instant prompt
 function display_fortune() {
@@ -180,4 +176,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 . "$HOME/.local/bin/env"
 
 eval "$(zoxide init zsh)"
+
+eval "$(starship init zsh)"
 
