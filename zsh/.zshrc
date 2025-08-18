@@ -159,10 +159,6 @@ autoload -Uz compinit
 # Use -C to enable cache (default Oh My Zsh may already be set, safe to add)
 compinit -C
 
-
-source <(fzf --zsh)
-. "/Users/vanajmoorthy/.deno/env"
-
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 
 # bun completions
@@ -171,9 +167,6 @@ export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
-
-
-. "$HOME/.local/bin/env"
 
 eval "$(zoxide init zsh)"
 
