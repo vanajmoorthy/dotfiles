@@ -31,6 +31,18 @@ return {
 			})
 		end,
 	},
+  {
+		"nvim-tree/nvim-tree.lua",
+		opts = {
+			git = {
+				enable = true,
+				timeout = 2000, -- bump timeout (default is 400ms)
+			},
+			renderer = {
+				highlight_git = true,
+			},
+		},
+	},
 
 	-- {
 	-- 	"nvim-treesitter/nvim-treesitter",
