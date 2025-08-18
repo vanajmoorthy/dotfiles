@@ -124,6 +124,7 @@ export PATH="$DENO_INSTALL/bin:$PATH"
 
 alias gs="git status"
 alias nom=npm 
+alias y=yarn
 alias cd="z"
 
 
