@@ -169,6 +169,17 @@ vim.api.nvim_create_autocmd("BufDelete", {
 	end,
 })
 
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+	callback = function()
+		vim.opt.autoindent = true
+		vim.opt.smartindent = true
+		vim.opt.tabstop = 4
+		vim.opt.shiftwidth = 4
+		vim.opt.expandtab = true
+	end,
+})
+
 vim.o.foldmethod = "expr"
 vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldenable = true

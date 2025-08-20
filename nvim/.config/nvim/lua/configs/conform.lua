@@ -24,6 +24,14 @@ local options = {
 		lsp_fallback = true, -- IMPORTANT: If conform doesn't have a formatter, try LSP (like tsserver)
 	},
 
+	formatters = {
+		prettier = {
+			command = "prettier", -- use local prettier if available
+			args = { "--stdin-filepath", "$FILENAME" },
+			cwd = require("conform.util").root_file({ ".prettierrc", ".prettierrc.json", "package.json" }),
+		},
+	},
+
 	-- Optional: Add configuration for specific formatters if needed
 	-- formatters = {
 	--   prettier = {
