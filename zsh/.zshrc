@@ -121,6 +121,7 @@ export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/go/bin
 export DENO_INSTALL="/Users/vanajmoorthy/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
+export PATH="/Users/vanajmoorthy/Library/Python/3.9/bin:$PATH"
 
 alias gs="git status"
 alias nom=npm 
@@ -160,7 +161,8 @@ autoload -Uz compinit
 # Use -C to enable cache (default Oh My Zsh may already be set, safe to add)
 compinit -C
 
-export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
+export JAVA_HOME="/opt/homebrew/opt/openjdk@17"
+export PATH="$JAVA_HOME/bin:$PATH"
 
 # bun completions
 [ -s "/Users/vanajmoorthy/.bun/_bun" ] && source "/Users/vanajmoorthy/.bun/_bun"
@@ -173,3 +175,10 @@ eval "$(zoxide init zsh)"
 
 eval "$(starship init zsh)"
 
+export PATH="/opt/homebrew/bin:$PATH"
+
+export ANDROID_HOME=$HOME/Library/Android/sdk
+export PATH=$PATH:$ANDROID_HOME/emulator
+export PATH=$PATH:$ANDROID_HOME/platform-tools
+export PATH=$PATH:$ANDROID_HOME/tools
+export PATH=$PATH:$ANDROID_HOME/tools/bin
