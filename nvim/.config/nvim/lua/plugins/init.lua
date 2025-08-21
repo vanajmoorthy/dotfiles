@@ -31,7 +31,7 @@ return {
 			})
 		end,
 	},
-  {
+	{
 		"nvim-tree/nvim-tree.lua",
 		opts = {
 			git = {
@@ -42,6 +42,10 @@ return {
 				highlight_git = true,
 			},
 		},
+	},
+	{
+		"windwp/nvim-autopairs",
+		enabled = false, -- disables autopairs completely
 	},
 
 	-- {
