@@ -17,6 +17,9 @@ export ZSH="$HOME/.oh-my-zsh"
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 ZSH_THEME="robbyrussell"
 
+export PYENV_ROOT="$HOME/.pyenv"
+[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+eval "$(pyenv init - zsh)"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -121,7 +124,6 @@ export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/go/bin
 export DENO_INSTALL="/Users/vanajmoorthy/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
-export PATH="/Users/vanajmoorthy/Library/Python/3.9/bin:$PATH"
 
 alias gs="git status"
 alias nom=npm 
@@ -182,3 +184,7 @@ export PATH=$PATH:$ANDROID_HOME/emulator
 export PATH=$PATH:$ANDROID_HOME/platform-tools
 export PATH=$PATH:$ANDROID_HOME/tools
 export PATH=$PATH:$ANDROID_HOME/tools/bin
+
+export CPPFLAGS="-I$(brew --prefix openssl)/include -I$(xcrun -show-sdk-path)/usr/include -I$(brew --prefix zlib)/include"
+export LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix zlib)/lib"
+
