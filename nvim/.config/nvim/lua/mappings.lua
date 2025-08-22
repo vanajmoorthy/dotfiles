@@ -2,6 +2,11 @@ require("nvchad.mappings")
 
 local map = vim.keymap.set
 
+local builtin = require("telescope.builtin")
+
+-- Override gd to use Telescope's LSP definitions picker
+map("n", "gd", builtin.lsp_definitions, { desc = "LSP Definitions (Telescope)" })
+
 map("i", "jk", "<ESC>")
 
 map("n", "<C-d>", "<C-d>zz", { desc = "Center cursor after moving down half-page" })
