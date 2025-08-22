@@ -187,6 +187,11 @@ symbol = "󰏗 "
 
 [python]
 symbol = " "
+format = 'via [${virtualenv}](bold green) [${version}]($style) '
+pyenv_version_name = true
+style = "bold blue"
+detect_extensions = ["py"]
+detect_files = ["pyproject.toml"]
 
 [rlang]
 symbol = "󰟔 "
