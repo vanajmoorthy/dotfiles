@@ -52,7 +52,7 @@ require("lazy").setup({
 					"denols",
 					"emmet_ls",
 					"tailwindcss", -- Add this
-					"tsserver", -- Add this (Mason's name for typescript-language-server)
+					"ts_ls", -- Add this (Mason's name for typescript-language-server)
 					"eslint", -- Add this (Or eslint_d if you prefer)
 					"html", -- Add this
 					"cssls", -- Add this
@@ -63,7 +63,7 @@ require("lazy").setup({
 					-- Add any other linters/formatters/LSPs you use here
 				},
 				-- Optional: Add automatic_installation = true if you want Mason to automatically install listed servers if missing
-				-- automatic_installation = true,
+				automatic_installation = true,
 			})
 		end,
 	},
