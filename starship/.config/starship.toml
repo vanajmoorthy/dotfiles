@@ -17,7 +17,7 @@ success_symbol = "[❯](bold fg:#ff66aa)"   # pink for success
 error_symbol = "[❯](bold red)"   
 
 [aws]
-symbol = "  "
+disabled = true
 
 [buf]
 symbol = " "
@@ -67,6 +67,7 @@ symbol = " "
 
 [gcloud]
 symbol = "  "
+disabled = true
 
 [git_branch]
 symbol = " "
