@@ -45,7 +45,7 @@ return {
 	},
 	{
 		"windwp/nvim-autopairs",
-		enabled = false, -- disables autopairs completely
+		enabled = true,
 	},
 
 	-- {
