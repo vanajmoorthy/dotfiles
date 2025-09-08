@@ -191,3 +191,4 @@ export LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix zlib)/lib"
 
 # Created by `pipx` on 2025-08-28 13:33:23
 export PATH="$PATH:/Users/vanajmoorthy/.local/bin"
+eval "$(pyenv virtualenv-init -)"
