@@ -1,6 +1,9 @@
 require("nvchad.mappings")
 
 local map = vim.keymap.set
+local del = vim.keymap.del
+
+del("n", "<leader>h")
 
 local builtin = require("telescope.builtin")
 
