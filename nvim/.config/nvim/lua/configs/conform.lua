@@ -12,7 +12,7 @@ local options = {
 		json = { "prettier" }, -- Add other types prettier supports
 		yaml = { "prettier" },
 		markdown = { "prettier" },
-		python = { "black", "isort" },
+		python = { "isort", "black" },
 		terraform = { "terraform_fmt" },
 		-- Add go if needed, ensure gofmt/goimports are installed via Mason
 		-- go = { "gofmt", "goimports" },
@@ -20,8 +20,8 @@ local options = {
 
 	format_on_save = {
 		-- These options will be passed to conform.format()
-		timeout_ms = 500,
-		lsp_fallback = true, -- IMPORTANT: If conform doesn't have a formatter, try LSP (like tsserver)
+		timeout_ms = 3000,
+		lsp_fallback = false, -- IMPORTANT: If conform doesn't have a formatter, try LSP (like tsserver)
 	},
 
 	-- Optional: Add configuration for specific formatters if needed
@@ -32,7 +32,6 @@ local options = {
 	-- }
 }
 
--- *** ADD THIS LINE ***
 require("conform").setup(options)
 
 -- Return the options table (optional, but can be useful for debugging/chaining)

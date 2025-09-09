@@ -5,6 +5,17 @@ local lspconfig = require("lspconfig")
 
 local nvlsp = require("nvchad.configs.lspconfig")
 
+local on_attach_no_format = function(client, bufnr)
+	-- First, run the default NvChad on_attach to get all the keymaps and other setup
+	require("nvchad.configs.lspconfig").on_attach(client, bufnr)
+
+	-- THIS IS THE IMPORTANT PART:
+	-- Disable formatting capabilities from this language server.
+	-- This forces Neovim to use 'conform.nvim' instead.
+	client.server_capabilities.documentFormattingProvider = false
+	client.server_capabilities.documentRangeFormattingProvider = false
+end
+
 lspconfig.denols.setup({
 	cmd = { "deno", "lsp" },
 	cmd_env = { NO_COLOR = true },
@@ -25,7 +36,7 @@ lspconfig.denols.setup({
 })
 
 lspconfig.pyright.setup({
-	on_attach = nvlsp.on_attach,
+	on_attach = on_attach_no_format,
 	capabilities = nvlsp.capabilities,
 	settings = {
 		python = {
