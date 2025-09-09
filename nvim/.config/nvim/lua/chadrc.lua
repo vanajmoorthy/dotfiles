@@ -6,44 +6,44 @@
 local M = {}
 
 M.ui = {
-  nvdash = {
-    load_on_startup = true,
-  },
-  tabufline = {
-    enabled = true,
-    lazyload = true,
-    order = { "treeOffset", "buffers", "tabs", "btns" },
-    modules = nil,
-  },
+	nvdash = {
+		load_on_startup = true,
+	},
+	tabufline = {
+		enabled = true,
+		lazyload = true,
+		order = { "treeOffset", "buffers", "tabs", "btns" },
+		modules = nil,
+	},
 }
 
 M.nvdash = {
-  load_on_startup = true,
-  header = {
-    "           ▄ ▄                   ",
-    "       ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     ",
-    "       █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     ",
-    "    ▄▄ █▄█▄▄▄█ █▄█▄█▄▄█▄▄█ █     ",
-    "  ▄ █▄▄█ ▄ ▄▄ ▄█ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄  ",
-    "  █▄▄▄▄ ▄▄▄ █ ▄ ▄▄▄ ▄ ▄▄▄ ▄ ▄ █ ▄",
-    "▄ █ █▄█ █▄█ █ █ █▄█ █ █▄█ ▄▄▄ █ █",
-    "█▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █",
-    "    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    ",
-    "                                 ",
-  },
+	load_on_startup = true,
+	header = {
+		"           ▄ ▄                   ",
+		"       ▄   ▄▄▄     ▄ ▄▄▄ ▄ ▄     ",
+		"       █ ▄ █▄█ ▄▄▄ █ █▄█ █ █     ",
+		"    ▄▄ █▄█▄▄▄█ █▄█▄█▄▄█▄▄█ █     ",
+		"  ▄ █▄▄█ ▄ ▄▄ ▄█ ▄▄▄▄▄▄▄▄▄▄▄▄▄▄  ",
+		"  █▄▄▄▄ ▄▄▄ █ ▄ ▄▄▄ ▄ ▄▄▄ ▄ ▄ █ ▄",
+		"▄ █ █▄█ █▄█ █ █ █▄█ █ █▄█ ▄▄▄ █ █",
+		"█▄█ ▄ █▄▄█▄▄█ █ ▄▄█ █ ▄ █ █▄█▄█ █",
+		"    █▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄█ █▄█▄▄▄█    ",
+		"                                 ",
+	},
 }
 
 M.base46 = {
-  theme = "gruvbox",
+	theme = "gruvbox",
 
-  -- hl_override = {
-  -- 	Comment = { italic = true },
-  --  },
-  -- },
+	-- hl_override = {
+	-- 	Comment = { italic = true },
+	--  },
+	-- },
 }
 
 M.lsp = {
-  signature = true
+	signature = true,
 }
 
 return M
