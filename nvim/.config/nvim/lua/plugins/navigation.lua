@@ -170,9 +170,16 @@ return {
 			{
 				"<leader>rn",
 				function()
-					Snacks.rename()
+					Snacks.rename.rename_file()
 				end,
 				desc = "Rename File",
+			},
+			{
+				"<leader>fo",
+				function()
+					Snacks.picker.recent()
+				end,
+				desc = "Recent Files",
 			},
 		},
 		init = function()
