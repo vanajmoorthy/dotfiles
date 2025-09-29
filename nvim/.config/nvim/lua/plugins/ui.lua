@@ -78,11 +78,13 @@ return {
 				hijack_netrw = true,
 			})
 			vim.cmd([[
-        highlight NvimTreeGitDirty guifg=#fb4934
-        highlight NvimTreeGitStaged guifg=#b8bb26
-        highlight NvimTreeGitNew guifg=#fabd2f
-        highlight NvimTreeGitDeleted guifg=#fb4934
-      ]])
+  highlight NvimTreeGitDirty guifg=#d79921
+  highlight NvimTreeGitStaged guifg=#98971a
+  highlight NvimTreeGitNew guifg=#d79921
+  highlight NvimTreeGitDeleted guifg=#cc241d
+  highlight NvimTreeGitRenamed guifg=#458588
+  highlight NvimTreeGitUntracked guifg=#b16286
+]])
 		end,
 	},
 	-- Icons
