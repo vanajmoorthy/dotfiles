@@ -140,14 +140,14 @@ return {
 				desc = "Buffers",
 			},
 			{
-				"<leader>fg",
+				"<leader>fw",
 				function()
 					Snacks.picker.grep()
 				end,
 				desc = "Grep",
 			},
 			{
-				"<leader>fw",
+				"<leader>fg",
 				function()
 					Snacks.picker.grep_word()
 				end,

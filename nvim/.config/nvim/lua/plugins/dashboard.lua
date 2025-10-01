@@ -158,7 +158,7 @@ return {
 
 			-- Footer
 			dashboard.section.footer.val = {
-				"ff: find files  │  fg: search  │  q: quit",
+				"ff: find files  │  fw: grep  │  q: quit",
 			}
 			dashboard.section.footer.opts.hl = "Orange"
 
