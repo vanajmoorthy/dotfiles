@@ -4,3 +4,4 @@ font-feature = -liga
 font-feature = -dlig
 macos-titlebar-style = tabs
 macos-option-as-alt = true
+keybind = alt+3=text:#
