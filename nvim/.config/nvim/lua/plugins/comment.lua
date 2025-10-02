@@ -5,24 +5,18 @@ return {
 	config = function()
 		require("Comment").setup()
 
-		-- This is the key part that adds the mapping you want
+		-- Normal mode: toggle comment on current line
+		vim.keymap.set("n", "<leader>/", function()
+			require("Comment.api").toggle.linewise.current()
+		end, { desc = "Toggle comment" })
+
+		-- Visual mode: toggle comment on selected lines
 		vim.keymap.set(
-			-- The modes to set the keymap in
-			-- 'n' for normal mode, 'v' for visual mode
-			{ "n", "v" },
-
-			-- The key sequence to map
+			"v",
 			"<leader>/",
-
-			-- The function to execute
-			-- This uses the plugin's API to toggle comments linewise
-			function()
-				require("Comment.api").toggle.linewise.current()
-			end,
-
-			-- Options for the keymap
+			"<ESC><cmd>lua require('Comment.api').toggle.linewise(vim.fn.visualmode())<CR>",
 			{
-				desc = "Toggle comment", -- A description for which-key
+				desc = "Toggle comment",
 			}
 		)
 	end,
