@@ -118,7 +118,6 @@ source $HOMEBREW_PREFIX/share/zsh-autocomplete/zsh-autocomplete.plugin.zsh
 #
 #
 
-eval "$(fnm env --use-on-cd --shell=zsh)"
 
 export PATH=$PATH:$HOME/bin
 export PATH=$PATH:$HOME/go/bin
@@ -192,3 +191,6 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 # Created by `pipx` on 2025-08-28 13:33:23
 export PATH="$PATH:/Users/vanajmoorthy/.local/bin"
 eval "$(pyenv virtualenv-init -)"
+
+
+eval "$(fnm env --use-on-cd --shell=zsh)"
