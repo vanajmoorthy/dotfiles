@@ -22,11 +22,31 @@ return {
 
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "ts_ls", "html", "cssls", "pyright" },
+				ensure_installed = { "lua_ls", "ts_ls", "html", "cssls", "pyright", "eslint" },
 				handlers = {
 					function(server_name) -- default handler
 						lspconfig[server_name].setup({
 							capabilities = capabilities,
+						})
+					end,
+					["eslint"] = function()
+						lspconfig.eslint.setup({
+							capabilities = capabilities,
+							settings = {
+								-- Disable the eslint formatter
+								format = false,
+							},
+						})
+					end,
+					["ts_ls"] = function()
+						lspconfig.ts_ls.setup({
+							capabilities = capabilities,
+							-- This is the crucial part
+							on_attach = function(client, bufnr)
+								-- Disable LSP formatting capabilities to prevent conflicts with conform
+								client.server_capabilities.documentFormattingProvider = false
+								client.server_capabilities.documentRangeFormattingProvider = false
+							end,
 						})
 					end,
 					["lua_ls"] = function()
@@ -148,6 +168,22 @@ return {
 						lsp_fallback = true,
 					}
 				end,
+				formatters = {
+					prettier = {
+						-- By default, conform will run formatters from the project root.
+						-- This explicitly tells prettier to run from the file's directory,
+						-- allowing it to find the nearest .prettierrc.
+						-- However, a better approach for monorepos is to use `cwd`.
+						cwd = require("conform.util").root_file({
+							".prettierrc",
+							".prettierrc.json",
+							".prettierrc.js",
+							"prettier.config.js",
+							"package.json",
+							".git", -- Good fallback for project root
+						}),
+					},
+				},
 			})
 
 			-- Manual format keymap
