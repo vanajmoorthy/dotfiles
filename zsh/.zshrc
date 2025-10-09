@@ -128,6 +128,7 @@ alias gs="git status"
 alias nom=npm 
 alias y=yarn
 alias cd="z"
+alias gl="git log --oneline"
 
 
 # To ensure no output for instant prompt
