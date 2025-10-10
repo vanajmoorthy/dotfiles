@@ -232,7 +232,7 @@ Visual mode:
 | `K`          | Show hover documentation             |
 | `<C-k>`      | Show signature help (in insert mode) |
 | `<leader>ca` | Code actions (auto-fix)              |
-| `<leader>rn` | Rename symbol                        |
+| `<leader>rn` | Rename file                          |
 
 ### Auto-completion
 
