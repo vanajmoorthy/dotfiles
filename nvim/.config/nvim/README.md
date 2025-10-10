@@ -1,6 +1,6 @@
 # 🚀 Guide to Vanaj's Neovim
 
-A modern neovim setup with LSP, autocompletion, and powerful navigation.
+A modern neovim setup with LSP, autocompletion, and navigation.
 
 ## 📋 Table of Contents
 
@@ -504,7 +504,7 @@ ensure_installed = { "lua_ls", "ts_ls", "rust_analyzer" }
 
 ## 🤝 Contributing
 
-Feel free to customize this config! Key files:
+Feel free to fork and steal this config! Key files:
 
 - `init.lua` - Entry point
 - `lua/config/options.lua` - Vim options
@@ -522,4 +522,4 @@ Feel free to customize this config! Key files:
 
 ---
 
-**Happy coding! 🎉**
+**Alhamdulillah and Godspeed 🫡**
