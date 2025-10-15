@@ -211,5 +211,12 @@ export PATH=$PATH:$ANDROID_HOME/tools/bin
 export PATH="$PATH:/Users/vanajmoorthy/.local/bin"
 eval "$(pyenv virtualenv-init -)"
 
+_git_branch_name_completer() {
+    _git_branch
+}
+
+compdef _git_branch_name_completer pull
+compdef _git_branch_name_completer push
 
 eval "$(fnm env --use-on-cd --shell=zsh)"
+
