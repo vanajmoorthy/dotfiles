@@ -130,6 +130,24 @@ alias y=yarn
 alias cd="z"
 alias gl="git log --oneline"
 
+pull() {
+  if [ -z "$1" ]; then
+    git pull
+  elif [ "$2" = "-r" ]; then
+    git pull origin "$1" --rebase
+  else
+    git pull origin "$1"
+  fi
+}
+
+push() {
+  if [ -z "$1" ]; then
+    git push
+  else
+    git push origin "$1"
+  fi
+}
+
 
 # To ensure no output for instant prompt
 function display_fortune() {
