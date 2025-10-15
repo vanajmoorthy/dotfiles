@@ -6,8 +6,8 @@ keymap.set("n", "<esc>", "<cmd>nohlsearch<cr>")
 -- Exit terminal mode
 keymap.set("t", "<esc><esc>", [[<c-\><c-n>]], { desc = "Exit terminal mode" })
 
--- Copy entire file to clipboard
-keymap.set("n", "<leader>a", 'ggVG"+y', { desc = "Select and copy all text in file" })
+-- Select all text in the file
+keymap.set("n", "<leader>a", "ggVG", { desc = "Select all text in file" })
 
 -- Window navigation
 keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
