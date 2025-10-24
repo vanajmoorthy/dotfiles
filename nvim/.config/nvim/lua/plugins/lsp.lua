@@ -22,7 +22,7 @@ return {
 
 			require("mason").setup()
 			require("mason-lspconfig").setup({
-				ensure_installed = { "lua_ls", "ts_ls", "html", "cssls", "pyright", "eslint" },
+				ensure_installed = { "lua_ls", "ts_ls", "html", "cssls", "pyright", "eslint", "tailwindcss" },
 				handlers = {
 					function(server_name) -- default handler
 						lspconfig[server_name].setup({
@@ -63,6 +63,12 @@ return {
 									format = { enable = false },
 								},
 							},
+						})
+					end,
+					["tailwindcss"] = function()
+						lspconfig.tailwindcss.setup({
+							capabilities = capabilities,
+							filetypes = { "html", "javascript", "typescript", "react", "vue", "css" },
 						})
 					end,
 				},

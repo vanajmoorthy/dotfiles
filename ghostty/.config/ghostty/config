@@ -7,3 +7,4 @@ macos-option-as-alt = true
 keybind = alt+3=text:#
 background-opacity=0.9
 background-blur=true
+
