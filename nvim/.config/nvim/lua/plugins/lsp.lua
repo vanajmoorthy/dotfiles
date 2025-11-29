@@ -15,6 +15,7 @@ return {
 			"hrsh7th/cmp-path",
 			"stevearc/conform.nvim",
 			"mfussenegger/nvim-lint",
+			"sheerun/vim-polyglot",
 		},
 		config = function()
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
@@ -27,6 +28,12 @@ return {
 					function(server_name) -- default handler
 						lspconfig[server_name].setup({
 							capabilities = capabilities,
+						})
+					end,
+					["html"] = function()
+						lspconfig.html.setup({
+							capabilities = capabilities,
+							filetypes = { "html", "htmldjango" }, -- Add "htmldjango" here
 						})
 					end,
 					["eslint"] = function()
@@ -153,6 +160,7 @@ return {
 				formatters_by_ft = {
 					lua = { "stylua" },
 					python = { "black" },
+					htmldjango = { "djlint" },
 					javascript = { "prettier" },
 					typescript = { "prettier" },
 					javascriptreact = { "prettier" },
@@ -175,6 +183,10 @@ return {
 					}
 				end,
 				formatters = {
+					djlint = {
+						-- Tells djlint to also format CSS and JS within the template
+						args = { "--reformat", "--format-css", "-" },
+					},
 					prettier = {
 						-- By default, conform will run formatters from the project root.
 						-- This explicitly tells prettier to run from the file's directory,
