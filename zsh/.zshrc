@@ -220,3 +220,4 @@ compdef _git_branch_name_completer push
 
 eval "$(fnm env --use-on-cd --shell=zsh)"
 
+eval "$(rbenv init - zsh)"
