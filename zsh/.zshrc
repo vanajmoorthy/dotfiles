@@ -152,6 +152,8 @@ push() {
   fi
 }
 
+alias vrc='yarn dlx vibe-rules convert cursor claude-code .cursor'
+
 
 # To ensure no output for instant prompt
 function display_fortune() {
