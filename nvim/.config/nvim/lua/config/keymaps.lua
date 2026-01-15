@@ -7,13 +7,19 @@ keymap.set("n", "<esc>", "<cmd>nohlsearch<cr>")
 keymap.set("t", "<esc><esc>", [[<c-\><c-n>]], { desc = "Exit terminal mode" })
 
 -- Select all text in the file
-keymap.set("n", "<leader>a", "ggVG", { desc = "Select all text in file" })
+keymap.set("n", "<C-a>", "ggVG", { desc = "Select all text in file" })
 
 -- Window navigation
 keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 keymap.set("n", "<C-j>", "<C-w><c-j>", { desc = "Move focus to the lower window" })
 keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
+
+-- Window navigation from terminal mode
+keymap.set("t", "<C-h>", [[<C-\><C-n><C-w>h]], { desc = "Move focus to the left window" })
+keymap.set("t", "<C-l>", [[<C-\><C-n><C-w>l]], { desc = "Move focus to the right window" })
+keymap.set("t", "<C-j>", [[<C-\><C-n><C-w>j]], { desc = "Move focus to the lower window" })
+keymap.set("t", "<C-k>", [[<C-\><C-n><C-w>k]], { desc = "Move focus to the upper window" })
 
 -- NvimTree toggle
 keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle NvimTree" })

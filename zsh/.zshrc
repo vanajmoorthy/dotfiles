@@ -129,6 +129,10 @@ alias nom=npm
 alias y=yarn
 alias cd="z"
 alias gl="git log --oneline"
+alias gcm='git commit -m'
+alias gaa='git add -A'
+alias gap='git add -p'
+alias gc='git commit'
 
 pull() {
   if [ -z "$1" ]; then
