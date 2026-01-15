@@ -1,6 +1,6 @@
-# 🚀 Guide to Vanaj's Neovim
+# 🐢 Guide to Vanaj's Neovim
 
-A modern neovim setup with LSP, autocompletion, and navigation.
+Waheguruji da khalsa 🙏
 
 ## 📋 Table of Contents
 
