@@ -11,6 +11,7 @@ A modern neovim setup with LSP, autocompletion, and navigation.
 - [File Navigation](#file-navigation)
 - [Text Editing](#text-editing)
 - [Diagnostics & Errors](#diagnostics--errors)
+- [Claude Code Integration](#claude-code-integration)
 - [Tips & Tricks](#tips--tricks)
 
 ---
@@ -48,9 +49,12 @@ brew install stylua  # or: cargo install stylua
 
 ### Essential
 
-| Keymap    | Mode   | Action                                    |
-| --------- | ------ | ----------------------------------------- |
-| `<Space>` | Normal | Leader key (triggers all shortcuts below) |
+| Keymap       | Mode     | Action                                    |
+| ------------ | -------- | ----------------------------------------- |
+| `<Space>`    | Normal   | Leader key (triggers all shortcuts below) |
+| `<Esc>`      | Normal   | Clear search highlights                   |
+| `<Esc><Esc>` | Terminal | Exit terminal mode                        |
+| `<C-a>`      | Normal   | Select all text in file                   |
 
 ---
 
@@ -81,10 +85,11 @@ brew install stylua  # or: cargo install stylua
 | Keymap             | Action                      |
 | ------------------ | --------------------------- |
 | `<leader>ff`       | Find files                  |
-| `<leader>fg`       | Live grep (search in files) |
-| `<leader>fw`       | Grep word under cursor      |
+| `<leader>fw`       | Live grep (search in files) |
+| `<leader>fg`       | Grep word under cursor      |
 | `<leader>fb`       | Find buffers                |
 | `<leader>fh`       | Search help tags            |
+| `<leader>fo`       | Recent files                |
 | **Inside picker:** |                             |
 | `<CR>`             | Open in current buffer      |
 | `<C-v>`            | Open in vertical split      |
@@ -206,16 +211,16 @@ Visual mode:
 
 ### 🧭 Window Navigation
 
-| Keymap      | Action                 |
-| ----------- | ---------------------- |
-| `<C-h>`     | Move to left window    |
-| `<C-j>`     | Move to bottom window  |
-| `<C-k>`     | Move to top window     |
-| `<C-l>`     | Move to right window   |
-| `<C-Up>`    | Increase window height |
-| `<C-Down>`  | Decrease window height |
-| `<C-Left>`  | Decrease window width  |
-| `<C-Right>` | Increase window width  |
+| Keymap      | Mode     | Action                 |
+| ----------- | -------- | ---------------------- |
+| `<C-h>`     | Normal   | Move to left window    |
+| `<C-j>`     | Normal   | Move to bottom window  |
+| `<C-k>`     | Normal   | Move to top window     |
+| `<C-l>`     | Normal   | Move to right window   |
+| `<C-h>`     | Terminal | Move to left window    |
+| `<C-j>`     | Terminal | Move to bottom window  |
+| `<C-k>`     | Terminal | Move to top window     |
+| `<C-l>`     | Terminal | Move to right window   |
 
 ---
 
@@ -273,6 +278,8 @@ function name(params) {
 | `<leader>xX` | Toggle diagnostics (current file) |
 | `<leader>cs` | Show document symbols             |
 | `<leader>cl` | Show LSP definitions/references   |
+| `<leader>xL` | Toggle location list              |
+| `<leader>xQ` | Toggle quickfix list              |
 
 **Inside Trouble:**
 
@@ -332,6 +339,46 @@ Automatically opens when you run `nvim` with no file.
 - Quick access to recent files
 - Built-in actions (new file, quit, etc.)
 - Navigate with `j/k`, select with `<CR>`
+
+---
+
+## 🤖 Claude Code Integration
+
+AI-powered coding assistant integration via `claudecode.nvim`.
+
+### Basic Commands
+
+| Keymap       | Mode   | Action                    |
+| ------------ | ------ | ------------------------- |
+| `<leader>ac` | Normal | Toggle Claude terminal    |
+| `<leader>af` | Normal | Focus Claude terminal     |
+| `<leader>ar` | Normal | Resume previous session   |
+| `<leader>aC` | Normal | Continue last conversation|
+| `<leader>am` | Normal | Select Claude model       |
+
+### Sending Context to Claude
+
+| Keymap       | Mode          | Action                              |
+| ------------ | ------------- | ----------------------------------- |
+| `<leader>ab` | Normal        | Add current buffer to context       |
+| `<leader>as` | Visual        | Send selected text to Claude        |
+| `<leader>as` | File Explorer | Add file under cursor to context    |
+
+### Diff Management
+
+| Keymap       | Action                           |
+| ------------ | -------------------------------- |
+| `<leader>aa` | Accept diff suggested by Claude  |
+| `<leader>ad` | Deny/reject diff                 |
+
+**Workflow:**
+
+```
+1. Open Claude with <leader>ac
+2. Add relevant files with <leader>ab or select code with <leader>as
+3. Ask Claude to make changes
+4. Review diffs and accept (<leader>aa) or deny (<leader>ad)
+```
 
 ---
 
@@ -445,6 +492,7 @@ File explorer shows git status:
   - mini.starter - Dashboard
 - **indent-blankline** - Indent guides
 - **marks.nvim** - Enhanced marks
+- **claudecode.nvim** - Claude AI integration
 
 ---
 
