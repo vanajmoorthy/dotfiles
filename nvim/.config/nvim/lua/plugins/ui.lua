@@ -105,6 +105,7 @@ return {
 					separator_style = "slant",
 					show_buffer_close_icons = true,
 					show_close_icon = true,
+					sort_by = "insert_at_end", -- New buffers open on the right
 					custom_filter = function(buf_number)
 						-- Simple filter - scope.nvim handles tab-scoping automatically
 						if vim.api.nvim_buf_get_name(buf_number) ~= "" then

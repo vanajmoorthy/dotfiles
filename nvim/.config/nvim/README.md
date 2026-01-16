@@ -197,15 +197,22 @@ Visual mode:
 
 ### 📋 Buffers & Tabs
 
-| Keymap       | Action               |
-| ------------ | -------------------- |
-| `<Tab>`      | Next buffer          |
-| `<S-Tab>`    | Previous buffer      |
-| `<leader>x`  | Close current buffer |
-| `<leader>tc` | Create new tab       |
-| `<leader>td` | Close current tab    |
-| `<leader>tn` | Go to next tab       |
-| `<leader>tp` | Go to previous tab   |
+| Keymap       | Action                |
+| ------------ | --------------------- |
+| `<Tab>`      | Next buffer           |
+| `<S-Tab>`    | Previous buffer       |
+| `<leader>x`  | Close current buffer  |
+| `<leader>bl` | Move buffer right     |
+| `<leader>bh` | Move buffer left      |
+| `<leader>tc` | Create new tab        |
+| `<leader>td` | Close current tab     |
+| `<leader>tn` | Go to next tab        |
+| `<leader>tp` | Go to previous tab    |
+
+**Buffer behavior:**
+- New buffers always open on the rightmost side
+- Closing a buffer navigates to the left buffer (or right if on leftmost)
+- Works correctly with NvimTree open
 
 ---
 

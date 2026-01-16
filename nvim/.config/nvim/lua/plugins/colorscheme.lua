@@ -13,5 +13,8 @@ return {
 
 		-- Load the colorscheme
 		vim.cmd.colorscheme("gruvbox-material")
+
+		-- Fix visual selection highlighting in terminal buffers
+		vim.api.nvim_set_hl(0, "Visual", { bg = "#504945", fg = "NONE" })
 	end,
 }
