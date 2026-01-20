@@ -32,7 +32,25 @@ return {
 					local diff = require("claudecode.diff")
 					local diff_data = diff._get_active_diffs()[tab_name]
 					local original_buf = diff_data and diff_data.original_buffer
+					local new_buf = diff_data and diff_data.new_buffer
 					local file_path = diff_data and diff_data.old_file_path
+
+					-- Find a buffer to return to (not the diff buffers)
+					local return_buf = nil
+					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+						if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+							local ft = vim.bo[buf].filetype
+							local buf_name = vim.api.nvim_buf_get_name(buf)
+							-- Skip diff buffers, NvimTree, terminals, and the file being diffed
+							if buf ~= original_buf and buf ~= new_buf
+								and ft ~= "NvimTree" and ft ~= "snacks_picker_list"
+								and vim.bo[buf].buftype ~= "terminal"
+								and buf_name ~= file_path then
+								return_buf = buf
+								break
+							end
+						end
+					end
 
 					-- Accept the diff
 					diff.accept_current_diff()
@@ -51,6 +69,10 @@ return {
 								pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
 							end
 						end
+						-- Return to previous buffer
+						if return_buf and vim.api.nvim_buf_is_valid(return_buf) then
+							vim.api.nvim_set_current_buf(return_buf)
+						end
 					end, 100)
 				end,
 				desc = "Accept diff",
@@ -68,6 +90,22 @@ return {
 					local diff = require("claudecode.diff")
 					local diff_data = diff._get_active_diffs()[tab_name]
 					local original_buf = diff_data and diff_data.original_buffer
+					local new_buf = diff_data and diff_data.new_buffer
+
+					-- Find a buffer to return to (not the diff buffers)
+					local return_buf = nil
+					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+						if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+							local ft = vim.bo[buf].filetype
+							-- Skip diff buffers, NvimTree, and terminals
+							if buf ~= original_buf and buf ~= new_buf
+								and ft ~= "NvimTree" and ft ~= "snacks_picker_list"
+								and vim.bo[buf].buftype ~= "terminal" then
+								return_buf = buf
+								break
+							end
+						end
+					end
 
 					-- Deny and clean up
 					diff.deny_current_diff()
@@ -77,6 +115,10 @@ return {
 						-- Also close the original file buffer from the diff view
 						if original_buf and vim.api.nvim_buf_is_valid(original_buf) then
 							pcall(vim.api.nvim_buf_delete, original_buf, { force = true })
+						end
+						-- Return to previous buffer
+						if return_buf and vim.api.nvim_buf_is_valid(return_buf) then
+							vim.api.nvim_set_current_buf(return_buf)
 						end
 					end, 100)
 				end,
