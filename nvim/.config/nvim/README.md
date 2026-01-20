@@ -373,10 +373,12 @@ AI-powered coding assistant integration via `claudecode.nvim`.
 
 ### Diff Management
 
-| Keymap       | Action                           |
-| ------------ | -------------------------------- |
-| `<leader>aa` | Accept diff suggested by Claude  |
-| `<leader>ad` | Deny/reject diff                 |
+| Keymap       | Action                                          |
+| ------------ | ----------------------------------------------- |
+| `<leader>aa` | Accept diff suggested by Claude (auto-cleanup)  |
+| `<leader>ad` | Deny/reject diff (auto-cleanup)                 |
+
+**Note:** Diff buffers are automatically closed after accepting or denying.
 
 **Workflow:**
 
