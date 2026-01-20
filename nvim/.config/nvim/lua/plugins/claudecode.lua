@@ -28,12 +28,29 @@ return {
 						vim.notify("No active diff found in current buffer", vim.log.levels.WARN)
 						return
 					end
-					-- Accept the diff
+					-- Get diff data to find the original buffer
 					local diff = require("claudecode.diff")
+					local diff_data = diff._get_active_diffs()[tab_name]
+					local original_buf = diff_data and diff_data.original_buffer
+					local file_path = diff_data and diff_data.old_file_path
+
+					-- Accept the diff
 					diff.accept_current_diff()
-					-- Clean up diff buffers after a short delay to let the accept complete
+
+					-- Clean up diff buffers after a short delay
 					vim.defer_fn(function()
 						diff._cleanup_diff_state(tab_name, "manual accept")
+						-- Also close the original file buffer from the diff view
+						if original_buf and vim.api.nvim_buf_is_valid(original_buf) then
+							pcall(vim.api.nvim_buf_delete, original_buf, { force = true })
+						end
+						-- If file was reloaded into another buffer, close that too
+						if file_path then
+							local bufnr = vim.fn.bufnr(file_path)
+							if bufnr ~= -1 and vim.api.nvim_buf_is_valid(bufnr) then
+								pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
+							end
+						end
 					end, 100)
 				end,
 				desc = "Accept diff",
@@ -47,11 +64,20 @@ return {
 						vim.notify("No active diff found in current buffer", vim.log.levels.WARN)
 						return
 					end
-					-- Deny and clean up
+					-- Get diff data to find the original buffer
 					local diff = require("claudecode.diff")
+					local diff_data = diff._get_active_diffs()[tab_name]
+					local original_buf = diff_data and diff_data.original_buffer
+
+					-- Deny and clean up
 					diff.deny_current_diff()
+
 					vim.defer_fn(function()
 						diff._cleanup_diff_state(tab_name, "manual deny")
+						-- Also close the original file buffer from the diff view
+						if original_buf and vim.api.nvim_buf_is_valid(original_buf) then
+							pcall(vim.api.nvim_buf_delete, original_buf, { force = true })
+						end
 					end, 100)
 				end,
 				desc = "Deny diff",
