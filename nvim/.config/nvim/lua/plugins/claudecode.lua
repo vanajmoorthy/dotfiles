@@ -28,24 +28,23 @@ return {
 						vim.notify("No active diff found in current buffer", vim.log.levels.WARN)
 						return
 					end
-					-- Get diff data to find the original buffer
+					-- Get diff data
 					local diff = require("claudecode.diff")
 					local diff_data = diff._get_active_diffs()[tab_name]
 					local original_buf = diff_data and diff_data.original_buffer
 					local new_buf = diff_data and diff_data.new_buffer
 					local file_path = diff_data and diff_data.old_file_path
 
-					-- Find a buffer to return to (not the diff buffers)
+					-- Find a buffer to return to (not diff buffers, not the diffed file)
 					local return_buf = nil
 					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 						if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
 							local ft = vim.bo[buf].filetype
 							local buf_name = vim.api.nvim_buf_get_name(buf)
-							-- Skip diff buffers, NvimTree, terminals, and the file being diffed
 							if buf ~= original_buf and buf ~= new_buf
+								and buf_name ~= file_path
 								and ft ~= "NvimTree" and ft ~= "snacks_picker_list"
-								and vim.bo[buf].buftype ~= "terminal"
-								and buf_name ~= file_path then
+								and vim.bo[buf].buftype ~= "terminal" then
 								return_buf = buf
 								break
 							end
@@ -55,23 +54,25 @@ return {
 					-- Accept the diff
 					diff.accept_current_diff()
 
-					-- Clean up diff buffers after a short delay
+					-- Clean up and restore
 					vim.defer_fn(function()
 						diff._cleanup_diff_state(tab_name, "manual accept")
-						-- Also close the original file buffer from the diff view
+						-- Close original diff buffer
 						if original_buf and vim.api.nvim_buf_is_valid(original_buf) then
 							pcall(vim.api.nvim_buf_delete, original_buf, { force = true })
 						end
-						-- If file was reloaded into another buffer, close that too
+						-- Close any buffer for the diffed file
 						if file_path then
 							local bufnr = vim.fn.bufnr(file_path)
 							if bufnr ~= -1 and vim.api.nvim_buf_is_valid(bufnr) then
 								pcall(vim.api.nvim_buf_delete, bufnr, { force = true })
 							end
 						end
-						-- Return to previous buffer
+						-- Return to previous buffer, or reopen the diffed file
 						if return_buf and vim.api.nvim_buf_is_valid(return_buf) then
 							vim.api.nvim_set_current_buf(return_buf)
+						elseif file_path then
+							vim.cmd("edit " .. vim.fn.fnameescape(file_path))
 						end
 					end, 100)
 				end,
@@ -86,19 +87,21 @@ return {
 						vim.notify("No active diff found in current buffer", vim.log.levels.WARN)
 						return
 					end
-					-- Get diff data to find the original buffer
+					-- Get diff data
 					local diff = require("claudecode.diff")
 					local diff_data = diff._get_active_diffs()[tab_name]
 					local original_buf = diff_data and diff_data.original_buffer
 					local new_buf = diff_data and diff_data.new_buffer
+					local file_path = diff_data and diff_data.old_file_path
 
-					-- Find a buffer to return to (not the diff buffers)
+					-- Find a buffer to return to (not diff buffers, not the diffed file)
 					local return_buf = nil
 					for _, buf in ipairs(vim.api.nvim_list_bufs()) do
 						if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
 							local ft = vim.bo[buf].filetype
-							-- Skip diff buffers, NvimTree, and terminals
+							local buf_name = vim.api.nvim_buf_get_name(buf)
 							if buf ~= original_buf and buf ~= new_buf
+								and buf_name ~= file_path
 								and ft ~= "NvimTree" and ft ~= "snacks_picker_list"
 								and vim.bo[buf].buftype ~= "terminal" then
 								return_buf = buf
@@ -112,13 +115,15 @@ return {
 
 					vim.defer_fn(function()
 						diff._cleanup_diff_state(tab_name, "manual deny")
-						-- Also close the original file buffer from the diff view
+						-- Close original diff buffer
 						if original_buf and vim.api.nvim_buf_is_valid(original_buf) then
 							pcall(vim.api.nvim_buf_delete, original_buf, { force = true })
 						end
-						-- Return to previous buffer
+						-- Return to previous buffer, or reopen the diffed file
 						if return_buf and vim.api.nvim_buf_is_valid(return_buf) then
 							vim.api.nvim_set_current_buf(return_buf)
+						elseif file_path then
+							vim.cmd("edit " .. vim.fn.fnameescape(file_path))
 						end
 					end, 100)
 				end,
