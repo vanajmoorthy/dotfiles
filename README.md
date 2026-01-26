@@ -1,6 +1,6 @@
 # Vanaj's Dotfiles
 
-Personal configurations for macOS, managed with [GNU Stow](https://www.gnu.org/software/stow/).
+Config for macOS, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 
 ## What's Included
 
@@ -25,5 +25,5 @@ stow nvim zsh tmux ghostty starship
 
 ## Notes
 
-- Neovim plugins auto-install on first launch
+- Neovim plugins should auto install on first launch
 - See `nvim/.config/nvim/README.md` for keybindings
