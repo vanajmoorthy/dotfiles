@@ -1,0 +1,12 @@
+{
+  "statusLine": {
+    "type": "command",
+    "command": "~/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "typescript-lsp@claude-plugins-official": true,
+    "compound-engineering@every-marketplace": true,
+    "shared-skills@global-ai-tools": true,
+    "coderabbit@claude-plugins-official": true
+  }
+}

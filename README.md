@@ -9,6 +9,7 @@ Config for macOS, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `tmux` - Terminal multiplexer config
 - `ghostty` - Ghostty terminal settings
 - `starship` - Prompt theme
+- `.claude` - Claude Code settings, statusline, and skills
 
 ## Installation
 
