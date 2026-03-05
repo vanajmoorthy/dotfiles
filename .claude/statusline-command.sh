@@ -33,7 +33,7 @@ fi
 # Build left and right sides (plain text for length calculation)
 left_plain="${dir_name}${git_branch}"
 if [ -n "$used_pct" ]; then
-    right_plain="ctx:${used_pct}%  ${current_time}"
+    right_plain="ctx:${used_pct}% ${current_time}"
 else
     right_plain="${current_time}"
 fi
@@ -47,10 +47,9 @@ if [ "$padding" -lt 1 ]; then
 fi
 spaces=$(printf '%*s' "$padding" '')
 
-# Build the status line with colors spread across the width
-# Pink for directory (bold), green for git branch (bold), yellow for context, cyan for time
+# Left: folder (pink) + branch (green) | Right: ctx (yellow) + time (cyan)
 if [ -n "$used_pct" ]; then
-    printf "\033[1;95m%s\033[0m\033[1;92m%s\033[0m%s\033[33mctx:%s%%\033[0m  \033[36m%s\033[0m" "$dir_name" "$git_branch" "$spaces" "$used_pct" "$current_time"
+    printf "\033[1;95m%s\033[0m\033[1;92m%s\033[0m%s\033[33mctx:%s%%\033[0m \033[36m%s\033[0m" "$dir_name" "$git_branch" "$spaces" "$used_pct" "$current_time"
 else
     printf "\033[1;95m%s\033[0m\033[1;92m%s\033[0m%s\033[36m%s\033[0m" "$dir_name" "$git_branch" "$spaces" "$current_time"
 fi
