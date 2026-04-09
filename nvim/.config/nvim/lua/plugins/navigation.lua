@@ -128,7 +128,28 @@ return {
 			{
 				"<leader>ff",
 				function()
-					Snacks.picker.files({ hidden = true, ignored = true })
+					Snacks.picker({
+						title = "Find Files",
+						finder = function(opts, ctx)
+							return require("snacks.picker.source.proc").proc({
+								opts,
+								{
+									cmd = "sh",
+									args = {
+										"-c",
+										table.concat({
+											-- All non-ignored files (respects .gitignore)
+											"fd --type f --type l --hidden --color never --exclude .git",
+											-- Gitignored .env* and *.md files only
+											"fd --type f --no-ignore --hidden --color never --exclude .git --glob '.env*'",
+											"fd --type f --no-ignore --hidden --color never --exclude .git --extension md",
+										}, "; ") .. " | sort -u",
+									},
+								},
+							}, ctx)
+						end,
+						format = "file",
+					})
 				end,
 				desc = "Find Files",
 			},
