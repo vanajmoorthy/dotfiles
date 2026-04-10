@@ -145,6 +145,9 @@ return {
 											"fd --type f --no-ignore --hidden --color never --exclude .git --extension md",
 										}, "; ") .. " | sort -u",
 									},
+									transform = function(item)
+										item.file = item.text
+									end,
 								},
 							}, ctx)
 						end,
