@@ -1,4 +1,5 @@
 {
+  "model": "claude-opus-4-7",
   "statusLine": {
     "type": "command",
     "command": "~/.claude/statusline-command.sh"
@@ -6,9 +7,9 @@
   "enabledPlugins": {
     "typescript-lsp@claude-plugins-official": true,
     "compound-engineering@every-marketplace": true,
-    "shared-skills@global-ai-tools": true,
     "coderabbit@claude-plugins-official": true,
-    "revdiff@revdiff": true
+    "revdiff@revdiff": true,
+    "finimize@global-ai-tools": true
   },
   "extraKnownMarketplaces": {
     "revdiff": {
@@ -18,5 +19,10 @@
       }
     }
   },
-  "skipDangerousModePermissionPrompt": true
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true,
+  "skipAutoPermissionPrompt": true,
+  "theme": "dark-daltonized",
+  "editorMode": "vim",
+  "preferredNotifChannel": "ghostty"
 }
