@@ -124,6 +124,7 @@ export PATH=$PATH:$HOME/go/bin
 export DENO_INSTALL="/Users/vanajmoorthy/.deno"
 export PATH="$DENO_INSTALL/bin:$PATH"
 
+alias m='op run --no-masking --environment 3xufhctd5tq6qyr44j4k5uetp4 -- python3 manage.py' 
 alias gs="git status"
 alias nom=npm 
 alias y=yarn
