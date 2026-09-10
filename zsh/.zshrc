@@ -198,8 +198,6 @@ export PATH="$JAVA_HOME/bin:$PATH"
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-eval "$(zoxide init zsh)"
-
 eval "$(starship init zsh)"
 
 export ANDROID_HOME=$HOME/Library/Android/sdk
@@ -226,3 +224,7 @@ compdef _git_branch_name_completer push
 eval "$(fnm env --use-on-cd --shell=zsh)"
 
 eval "$(rbenv init - zsh)"
+
+# zoxide must init last: it wraps cd/chpwd and warns if another tool
+# (fnm --use-on-cd, pyenv/rbenv) re-wraps them afterwards.
+eval "$(zoxide init zsh)"
