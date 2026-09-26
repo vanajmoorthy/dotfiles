@@ -11,4 +11,3 @@
 
 # Lua lock file (optional if you don't want to track plugin state)
 lazy-lock.json
-.claude/settings.json

@@ -9,7 +9,7 @@ Config for macOS, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `tmux` - Terminal multiplexer config
 - `ghostty` - Ghostty terminal settings
 - `starship` - Prompt theme
-- `.claude` - Claude Code settings, statusline, and skills
+- `claude` - Claude Code settings, statusline, and skills
 
 ## Installation
 
@@ -21,7 +21,7 @@ brew install --cask ghostty
 # Clone and install
 git clone https://github.com/vanajmoorthy/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow nvim zsh tmux ghostty starship
+stow nvim zsh tmux ghostty starship claude
 ```
 
 ## Notes
