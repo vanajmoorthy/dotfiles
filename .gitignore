@@ -11,3 +11,13 @@
 
 # Lua lock file (optional if you don't want to track plugin state)
 lazy-lock.json
+
+# Claude Code: the live settings file collects machine- and org-specific
+# hooks and context, and these skills are installed by other tools or private
+claude/.claude/settings.json
+claude/.claude/skills/argent-*
+claude/.claude/skills/oban-deep-pr-review/
+claude/.claude/skills/rex/
+claude/.claude/skills/synced/
+claude/.claude/skills/.trash/
+claude/.claude/skills/.claude/

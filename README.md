@@ -10,7 +10,7 @@ Config for macOS, managed with [GNU Stow](https://www.gnu.org/software/stow/).
 - `ghostty` - Ghostty terminal settings
 - `rex` - Rex tmux-style keybindings, plus `rx save` / `rx restore` to snapshot and rebuild sessions
 - `starship` - Prompt theme
-- `claude` - Claude Code settings, statusline, and skills
+- `claude` - Claude Code statusline and skills. `settings.json` lives here too, but is gitignored as it holds machine- and work-specific config
 
 ## Installation
 
