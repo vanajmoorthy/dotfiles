@@ -35,11 +35,50 @@ prefix("o", "pane.focus_next")
 prefix("shift+1", "pane.move_to_new_tab")
 
 -- Move between panes with hjkl and the arrow keys
-for key, direction in pairs({
-  h = "left", j = "down", k = "up", l = "right",
-  left = "left", down = "down", up = "up", right = "right",
-}) do
+for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
   prefix(key, "pane.focus", { direction = direction })
+end
+
+-- Like tmux's repeat-time: after C-a <arrow>, bare arrows keep moving between panes until
+-- REPEAT_SECONDS pass without one. Any later arrow goes to the terminal as usual.
+local REPEAT_SECONDS = 1.2
+local last_move_at = nil
+
+-- os.time() only counts whole seconds. Only called while a move is recent, so ordinary
+-- arrow presses never pay for it.
+local function now()
+  local result = rex.exec({ "/usr/bin/perl", "-MTime::HiRes=time", "-e", "printf q(%.3f), time" })
+  return (result and result.ok and tonumber(result.stdout)) or os.time()
+end
+
+-- Key-bound functions can't queue client actions, so this goes through the server
+local function focus_pane(ctx, direction)
+  local _, err = rex.call("session.focus_direction", {
+    session_id = ctx.session_id,
+    direction = direction,
+  })
+  if err ~= nil then rex.log(err) end
+end
+
+for _, direction in ipairs({ "left", "down", "up", "right" }) do
+  prefix(direction, function(ctx)
+    last_move_at = now()
+    focus_pane(ctx, direction)
+    return true
+  end)
+  rex.bind(direction, function(ctx)
+    if last_move_at == nil then
+      return false
+    end
+    local time = now()
+    if time - last_move_at > REPEAT_SECONDS then
+      last_move_at = nil
+      return false
+    end
+    last_move_at = time
+    focus_pane(ctx, direction)
+    return true
+  end)
 end
 
 -- Resize with ctrl+arrows, as tmux's default C-arrow
