@@ -1,0 +1,189 @@
+#!/usr/bin/env -S python3 -I
+"""Save and restore Rex sessions (tabs, split layout, folders, nvim/claude panes).
+
+    rx save      # overwrites the one saved snapshot
+    rx restore   # recreates saved sessions that aren't already open
+
+Running programs can't be saved: nvim panes reopen nvim, claude panes resume their
+conversation (or open the picker if it can't be found), everything else gets a shell.
+"""
+import json
+import os
+import re
+import shutil
+import subprocess
+import sys
+
+REX = shutil.which("rex") or (
+    "/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex"
+)
+STATE_FILE = os.path.expanduser("~/.local/state/rex-sessions.json")
+# Claude Code writes one file per running process, naming its conversation
+CLAUDE_SESSIONS_DIR = os.path.expanduser("~/.claude/sessions")
+# Rex's auto-generated tab labels, which restore leaves for Rex to generate again
+GENERATED_LABEL = re.compile(r"^Window [0-9a-f]{8}$")
+# What each saved program reopens as. The trailing shell keeps the pane after quitting it.
+RESTORE_COMMANDS = {
+    "nvim": "nvim; exec zsh -l",
+    "claude": "claude --resume; exec zsh -l",
+}
+
+
+def rex(*args):
+    result = subprocess.run([REX, *args], capture_output=True, text=True)
+    if result.returncode != 0:
+        sys.exit(f"rex {' '.join(args)} failed: {result.stderr.strip()}")
+    return json.loads(result.stdout) if "--json" in args else result.stdout
+
+
+def describe_pane(session_id, block_id):
+    process = json.loads(
+        subprocess.run(
+            [REX, "block", "call", "-s", session_id, "-b", block_id, "process"],
+            capture_output=True,
+            text=True,
+        ).stdout
+        or "{}"
+    )
+    foreground = process.get("foreground") or {}
+    # Claude Code's process is named after its version, e.g. "2.1.312"
+    path = foreground.get("path") or ""
+    name = foreground.get("name") or ""
+    program = "nvim" if name == "nvim" else "claude" if "claude" in path else None
+    pane = {"cwd": foreground.get("cwd") or os.path.expanduser("~"), "program": program}
+    if program == "claude":
+        pane["claude_session"] = read_claude_session(foreground.get("pid"))
+    return pane
+
+
+def read_claude_sessions():
+    sessions = []
+    for name in os.listdir(CLAUDE_SESSIONS_DIR):
+        try:
+            with open(os.path.join(CLAUDE_SESSIONS_DIR, name)) as file:
+                sessions.append(json.load(file))
+        except (OSError, ValueError):
+            continue
+    return sessions
+
+
+def read_claude_session(pid):
+    if not os.path.isdir(CLAUDE_SESSIONS_DIR):
+        return None
+    sessions = read_claude_sessions()
+    by_pid = next((s for s in sessions if s.get("pid") == pid), None)
+    if by_pid:
+        return by_pid.get("sessionId")
+    # A pane attached to a background agent runs `claude attach JOB`; the agent's own
+    # process holds the conversation
+    command = subprocess.run(
+        ["ps", "-o", "command=", "-p", str(pid)], capture_output=True, text=True
+    ).stdout.split()
+    if "attach" not in command or command.index("attach") + 1 >= len(command):
+        return None
+    job_id = command[command.index("attach") + 1]
+    by_job = next((s for s in sessions if s.get("jobId") == job_id), None)
+    return by_job.get("sessionId") if by_job else None
+
+
+def save_layout(session_id, node):
+    if "block_id" in node:
+        return describe_pane(session_id, node["block_id"])
+    split = node["split"]
+    return {
+        "direction": split["direction"],
+        "ratio": split["ratio"],
+        "before": save_layout(session_id, split["before"]),
+        "after": save_layout(session_id, split["after"]),
+    }
+
+
+def save():
+    sessions = []
+    for session in rex("ls", "--json")["sessions"]:
+        detail = rex("session", "inspect", session["session_id"], "--json")
+        windows = []
+        for window in detail["windows"]:
+            tiled = [layer for layer in window["layers"] if layer["kind"] == "tiled"]
+            if not tiled:
+                continue
+            label = window.get("label") or ""
+            windows.append(
+                {
+                    "label": None if GENERATED_LABEL.match(label) else label,
+                    "layout": save_layout(session["session_id"], tiled[0]["layout"]),
+                }
+            )
+        sessions.append({"label": session["label"], "windows": windows})
+    os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
+    with open(STATE_FILE, "w") as file:
+        json.dump(sessions, file, indent=2)
+    tabs = sum(len(session["windows"]) for session in sessions)
+    print(f"Saved {len(sessions)} sessions, {tabs} tabs to {STATE_FILE}")
+
+
+def first_pane(node):
+    return node if "cwd" in node else first_pane(node["before"])
+
+
+def command_for(pane):
+    command = RESTORE_COMMANDS.get(pane["program"])
+    if pane.get("claude_session"):
+        command = f"claude --resume {pane['claude_session']}; exec zsh -l"
+    return ["--", "zsh", "-lc", command] if command else []
+
+
+def build_splits(session_id, block_id, node):
+    """block_id already shows the node's first pane; split it to make the rest."""
+    if "cwd" in node:
+        return
+    after = first_pane(node["after"])
+    # Rex calls a side-by-side split "horizontal"; --ratio is the new pane's share
+    direction = "right" if node["direction"] == "horizontal" else "below"
+    ratio = max(1, min(99, round((1 - node["ratio"]) * 100)))
+    created = rex(
+        "split", "-s", session_id, "-b", block_id, f"--split={direction}",
+        f"--ratio={ratio}", "--focus=false", "-c", after["cwd"], "--json",
+        *command_for(after),
+    )
+    build_splits(session_id, block_id, node["before"])
+    build_splits(session_id, created["block_ids"][0], node["after"])
+
+
+def restore():
+    if not os.path.exists(STATE_FILE):
+        sys.exit(f"Nothing saved yet ({STATE_FILE}). Run `rx save` first.")
+    with open(STATE_FILE) as file:
+        sessions = json.load(file)
+    open_labels = {session["label"] for session in rex("ls", "--json")["sessions"]}
+    for session in sessions:
+        if session["label"] in open_labels:
+            print(f"Skipped {session['label']}: already open")
+            continue
+        session_id = None
+        for window in session["windows"]:
+            pane = first_pane(window["layout"])
+            label_args = [window["label"]] if window["label"] else []
+            if session_id is None:
+                window_flag = ["--window", window["label"]] if window["label"] else []
+                created = rex(
+                    "new", session["label"], "-c", pane["cwd"], *window_flag, "--json",
+                    *command_for(pane),
+                )
+                session_id = created["session_id"]
+                block_id = created["initial_windows"][0]["block_ids"][0]
+            else:
+                created = rex(
+                    "window", "new", "-s", session_id, *label_args, "-c", pane["cwd"],
+                    "--focus=false", "--json", *command_for(pane),
+                )
+                block_id = created["block_ids"][0]
+            build_splits(session_id, block_id, window["layout"])
+        print(f"Restored {session['label']} ({len(session['windows'])} tabs)")
+
+
+if __name__ == "__main__":
+    commands = {"save": save, "restore": restore}
+    if len(sys.argv) != 2 or sys.argv[1] not in commands:
+        sys.exit("usage: rx save|restore")
+    commands[sys.argv[1]]()

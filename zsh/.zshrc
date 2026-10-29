@@ -225,6 +225,9 @@ eval "$(fnm env --use-on-cd --shell=zsh)"
 
 eval "$(rbenv init - zsh)"
 
+# Claude Code only emits clickable links for terminals it recognises; Rex supports them
+[[ "$TERM_PROGRAM" == "rex" ]] && export FORCE_HYPERLINK=1
+
 # zoxide must init last: it wraps cd/chpwd and warns if another tool
 # (fnm --use-on-cd, pyenv/rbenv) re-wraps them afterwards.
 eval "$(zoxide init zsh)"
