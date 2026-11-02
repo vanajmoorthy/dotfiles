@@ -34,13 +34,9 @@ prefix("x", "pane.close")
 prefix("o", "pane.focus_next")
 prefix("shift+1", "pane.move_to_new_tab")
 
--- Move between panes with hjkl and the arrow keys
-for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
-  prefix(key, "pane.focus", { direction = direction })
-end
-
--- Like tmux's repeat-time: after C-a <arrow>, bare arrows keep moving between panes until
--- REPEAT_SECONDS pass without one. Any later arrow goes to the terminal as usual.
+-- Move between panes with hjkl and the arrow keys.
+-- Like tmux's repeat-time: after C-a <arrow/hjkl>, bare arrows/hjkl keep moving between panes until
+-- REPEAT_SECONDS pass without one. Any later key goes to the terminal as usual.
 local REPEAT_SECONDS = 1.2
 local last_move_at = nil
 
@@ -56,17 +52,22 @@ local function focus_pane(ctx, direction)
   local _, err = rex.call("session.focus_direction", {
     session_id = ctx.session_id,
     direction = direction,
+    wrap = true, -- like tmux: past the edge goes to the opposite side
   })
   if err ~= nil then rex.log(err) end
 end
 
-for _, direction in ipairs({ "left", "down", "up", "right" }) do
-  prefix(direction, function(ctx)
+local MOVE_KEYS = {
+  left = "left", down = "down", up = "up", right = "right",
+  h = "left", j = "down", k = "up", l = "right",
+}
+for key, direction in pairs(MOVE_KEYS) do
+  prefix(key, function(ctx)
     last_move_at = now()
     focus_pane(ctx, direction)
     return true
   end)
-  rex.bind(direction, function(ctx)
+  rex.bind(key, function(ctx)
     if last_move_at == nil then
       return false
     end
