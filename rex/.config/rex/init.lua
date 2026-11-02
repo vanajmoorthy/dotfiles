@@ -35,7 +35,7 @@ prefix("o", "pane.focus_next")
 prefix("shift+1", "pane.move_to_new_tab")
 
 -- Move between panes with hjkl and the arrow keys.
--- Like tmux's repeat-time: after C-a <arrow/hjkl>, bare arrows/hjkl keep moving between panes until
+-- Like tmux's repeat-time: after C-a <arrow/hjkl>, bare arrows keep moving between panes until
 -- REPEAT_SECONDS pass without one. Any later key goes to the terminal as usual.
 local REPEAT_SECONDS = 1.2
 local last_move_at = nil
@@ -67,7 +67,8 @@ for key, direction in pairs(MOVE_KEYS) do
     focus_pane(ctx, direction)
     return true
   end)
-  rex.bind(key, function(ctx)
+  -- Letters are left out: they'd hijack typing just after a move (e.g. "claude")
+  if #key > 1 then rex.bind(key, function(ctx)
     if last_move_at == nil then
       return false
     end
@@ -79,7 +80,7 @@ for key, direction in pairs(MOVE_KEYS) do
     last_move_at = time
     focus_pane(ctx, direction)
     return true
-  end)
+  end) end
 end
 
 -- Resize with ctrl+arrows, as tmux's default C-arrow
