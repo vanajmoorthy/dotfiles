@@ -130,3 +130,6 @@ for key, command in pairs({ ["ctrl+s"] = "save", ["ctrl+r"] = "restore" }) do
   }
   prefix(key, "rx_" .. command)
 end
+
+-- cmd+enter goes to the terminal instead of splitting the pane
+rex.unbind("cmd+enter")
