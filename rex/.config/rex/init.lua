@@ -30,7 +30,11 @@ prefix("shift+5", "pane.split", { direction = "right" })
 prefix("shift+2", "pane.split", { direction = "down" })
 prefix("shift+'", "pane.split", { direction = "down" }) -- " on a US layout
 prefix("z", "pane.zoom")
-prefix("x", "pane.close")
+-- C-a x asks first, like tmux: y closes, n or Escape cancels; other keys are ignored
+rex.mode("confirm_close", { exclusive = true })
+prefix("x", "client.mode.enter", { name = "confirm_close", once = true })
+rex.bind("confirm_close/y", "pane.close")
+rex.bind("confirm_close/n", "client.mode.exit")
 prefix("o", "pane.focus_next")
 prefix("shift+1", "pane.move_to_new_tab")
 
