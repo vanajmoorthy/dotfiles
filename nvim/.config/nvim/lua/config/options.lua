@@ -62,3 +62,24 @@ vim.diagnostic.config({
 		},
 	},
 })
+
+-- vim-polyglot's TS ftplugin does a global `set path+=node_modules/**`, so gf on an
+-- aliased import (e.g. 'Modules/Agents') crawls all of node_modules and hangs.
+-- Look in cwd-relative src/ and App/ (tsconfig baseUrl) instead, and resolve dir imports to index files.
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
+	callback = function()
+		vim.opt.path = ".,,src,App"
+		vim.opt_local.suffixesadd =
+			{ ".ts", ".tsx", ".js", ".jsx", "/index.ts", "/index.tsx", "/index.js", "/index.jsx" }
+		vim.opt_local.includeexpr = ""
+		-- plain gf accepts the bare directory before trying suffixes; findfile skips dirs
+		vim.keymap.set("n", "gf", function()
+			local f = vim.fn.findfile(vim.fn.expand("<cfile>"))
+			if f == "" then
+				return vim.notify("No file found for " .. vim.fn.expand("<cfile>"), vim.log.levels.WARN)
+			end
+			vim.cmd.edit(f)
+		end, { buffer = true })
+	end,
+})
