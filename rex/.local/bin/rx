@@ -1,7 +1,8 @@
 #!/usr/bin/env -S python3 -I
 """Save and restore Rex sessions (tabs, split layout, folders, nvim/claude panes).
 
-    rx save      # overwrites the one saved snapshot
+    rx save          # overwrites the snapshot, keeping the previous one as .bak
+    rx save --force  # saves even if it would drop every claude pane
     rx restore   # recreates saved sessions that aren't already open
 
 Running programs can't be saved: nvim panes reopen nvim, claude panes resume their
@@ -98,7 +99,16 @@ def save_layout(session_id, node):
     }
 
 
-def save():
+def count_claude_panes(sessions):
+    def count(node):
+        if "cwd" in node:
+            return node["program"] == "claude"
+        return count(node["before"]) + count(node["after"])
+
+    return sum(count(w["layout"]) for s in sessions for w in s["windows"])
+
+
+def save(force=False):
     sessions = []
     for session in rex("ls", "--json")["sessions"]:
         detail = rex("session", "inspect", session["session_id"], "--json")
@@ -115,6 +125,16 @@ def save():
                 }
             )
         sessions.append({"label": session["label"], "windows": windows})
+    if os.path.exists(STATE_FILE):
+        with open(STATE_FILE) as file:
+            saved_claude_panes = count_claude_panes(json.load(file))
+        # Saving right after a reboot would replace every claude pane with a bare shell
+        if saved_claude_panes and not count_claude_panes(sessions) and not force:
+            sys.exit(
+                f"Not saving: no claude panes are open, but the snapshot has "
+                f"{saved_claude_panes}. Run `rx restore` first, or `rx save --force`."
+            )
+        shutil.copy2(STATE_FILE, STATE_FILE + ".bak")
     os.makedirs(os.path.dirname(STATE_FILE), exist_ok=True)
     with open(STATE_FILE, "w") as file:
         json.dump(sessions, file, indent=2)
@@ -183,7 +203,10 @@ def restore():
 
 
 if __name__ == "__main__":
-    commands = {"save": save, "restore": restore}
-    if len(sys.argv) != 2 or sys.argv[1] not in commands:
-        sys.exit("usage: rx save|restore")
-    commands[sys.argv[1]]()
+    args = sys.argv[1:]
+    if args == ["save"] or args == ["save", "--force"]:
+        save(force="--force" in args)
+    elif args == ["restore"]:
+        restore()
+    else:
+        sys.exit("usage: rx save [--force] | rx restore")
